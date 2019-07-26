@@ -1,0 +1,15 @@
+{
+	"auth": {
+		"audiobookplayerdc38208a": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"userfiles": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
