@@ -1,31 +1,23 @@
 import AWS from 'aws-sdk';
-import Auth from '@aws-amplify/auth';
+import * as authUtils from './authUtils';
 
 let s3 = null;
-let initialized = false;
+export let initialized = false;
 
 const bucketName = "audiobook-player-files-audiobkenv";
+let currentUserId = null;
 
 init();
 
 export async function init() {
-    const credentials = await Auth.currentCredentials();
-    // .then(credentials => {
+    const credentials = await authUtils.getCredentials();
     AWS.config.credentials = credentials; 
     s3 = new AWS.S3({apiVersion: '2006-03-01'});
     initialized = true;
-    console.log("initialized aws")
-    // });
 }
 
-export async function putAudioFile(fileName, file) {
-    if(!initialized) {
-        await init();
-    }
-    await putFile(fileName, file, 'audio/m4b', result => console.log(result), err => console.log(err));
-}
 
-async function putFile(fileName, file, contentType, onSuccess, onFailure) {
+export async function putFile(fileName, file, contentType, onSuccess, onFailure) {
     const params = await getObjectParams(fileName, file);
     s3.putObject(params, function(err, data) {
         if (err) onFailure(err);
@@ -53,8 +45,9 @@ async function getPrivateUserFolder() {
     return "private/" + currentUserId;
 }
 
-//TODO: Add memoization
 async function getCurrentUserId() {
-    const { id } = await Auth.currentUserInfo();
+    if (currentUserId) return currentUserId;
+    const { id } = await authUtils.getCurrentUserId();
+    currentUserId = id; //Store for future use
     return id;
 }

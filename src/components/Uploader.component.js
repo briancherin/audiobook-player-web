@@ -1,5 +1,5 @@
 import React from 'react';
-import { putAudioFile } from '../api/storage';
+import { putAudioFile } from '../api/audioStorage';
 
 const Uploader = () => {
 
