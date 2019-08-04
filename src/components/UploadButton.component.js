@@ -4,23 +4,26 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
     fab: {
-        // position: 'absolute',
         top: theme.spacing(2),
-        // right: theme.spacing(3),
         textTransform: 'none'
     }
 }))
 
 
-const UploadButton = () => {
+const UploadButton = (props) => {
 
     const classes = useStyles();
+
+    function handleClick() {
+        props.onClick();
+    }
 
     return(
         <Fab 
             variant="extended" 
             aria-label="upload"
             className={classes.fab}
+            onClick={handleClick}
         >
             Upload an audiobook
         </Fab>
