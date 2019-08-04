@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { fetchSavedBooks } from '../api/audioStorage';
+import { fetchSavedBooks, deleteBook } from '../api/audioStorage';
 
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
@@ -38,11 +38,19 @@ function BookList() {
     }
 
     const handleDeleteAlertResponse = (bookKey, shouldDelete) => {
-        if (shouldDelete) {
-            //TODO: delete book
-        }
         setDeleteAlertOpen(false);
         setBookKeyToDelete('');
+
+        if (shouldDelete) {
+            deleteBook(bookKey).then((err, data) => {
+                if (err) console.log("Error in deleting book");
+                else {
+                    //TODO: Snackbar showing success?
+                    console.log("Book deleted successfully");
+                    setFileKeys(fileKeys.filter(key => key !== bookKey));
+                }
+            });
+        }
     }
 
     const handleDeleteAlertClose = () => {
