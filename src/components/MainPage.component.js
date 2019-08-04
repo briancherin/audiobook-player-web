@@ -6,34 +6,23 @@ import UploadButton from './UploadButton.component';
 
 export default class MainPage extends React.Component {
 
-    state = {
-        selectedBook: '',
-        selectedBookFile: null,
-        selectedBookStream: null
-    }
-
-    handleBookSelect = async (bookKey) => {
-        // const bookStream = getBookStream(bookKey)
-        // this.setState({selectedBookStream: bookStream})
-    }
 
 
     render() {
         return(
             <div>
-                
                 <Grid container>
                     <Grid xs>
                         <h1>My Library</h1>
                     </Grid>
-
                     <Grid item>
                         <UploadButton />
                     </Grid>
                 </Grid>
 
                 <Divider/>
-                <BookList onSelectBook={this.handleBookSelect}/>
+
+                <BookList />
             </div>
         );
     }
