@@ -65,20 +65,25 @@ function BookList() {
     }
 
     const renderSavedBooks = () => {
+        if (fileKeys.length > 0) {
+            return(
+                <List>
+                    {fileKeys.map(key => {
+                        return(
+                            <Card key={key}>
+                                <ListItem>
+                                    {renderBookImage()}
+                                    <ListItemText>{key}</ListItemText>
+                                    {renderBookMenu(key)}
+                                </ListItem>
+                            </Card>
+                        );
+                    })}
+                </List>
+            );
+        }
         return(
-            <List>
-                {fileKeys.map(key => {
-                    return(
-                        <Card key={key}>
-                            <ListItem>
-                                {renderBookImage()}
-                                <ListItemText>{key}</ListItemText>
-                                {renderBookMenu(key)}
-                            </ListItem>
-                        </Card>
-                    );
-                })}
-            </List>
+            <Typography>You currently have no audiobooks in your library. Try uploading an mp3 or m4b file!</Typography>
         );
     }
     
