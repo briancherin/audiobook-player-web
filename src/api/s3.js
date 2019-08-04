@@ -76,12 +76,17 @@ export async function listFiles() {
     });
 }
 
-export async function putFile(fileName, file, contentType, onSuccess, onFailure) {
+export async function putFile(fileName, file, contentType) {
     const params = await getPutFileParams(fileName, file);
-    s3.putObject(params, function(err, data) {
-        if (err) onFailure(err);
-        else onSuccess(data)
+    
+    return new Promise(function(resolve, reject) {
+        s3.putObject(params, function(err, data) {
+            if (err) reject(err);
+            else resolve(data)
+        });
     });
+    
+    
 }
 
 async function removePrefixFromKeys(keys) {

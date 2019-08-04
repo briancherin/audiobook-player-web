@@ -4,7 +4,13 @@ export async function putAudioFile(fileName, file) {
     if(!s3.initialized) {
         await s3.init();
     }
-    await s3.putFile(fileName, file, 'audio/m4b', result => console.log(result), err => console.log(err));
+    //TODO: Should be specifying audio/m4b????
+    return new Promise(function(resolve, reject) {
+        s3.putFile(fileName, file, 'audio/m4b').then((err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+        });
+    })
 }
 
 export async function deleteBook(fileKey) {
