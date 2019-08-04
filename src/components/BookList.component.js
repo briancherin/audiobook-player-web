@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { fetchSavedBooks } from '../api/audioStorage';
 
 import Card from '@material-ui/core/Card';
@@ -13,44 +13,43 @@ import { ListItemText, Avatar, Menu, MenuItem, Fab } from '@material-ui/core';
 
 
 
-class BookList extends React.Component {
+function BookList(props) {
 
-    state = {
-        fileKeys: [],
-        menuAnchorElement: null
-    }
+    const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
+    const [fileKeys, setFileKeys] = React.useState([]);
 
-    async componentDidMount() {
+
+    //Hooks equivalent of componentDidMount()
+    useEffect(() => {
         fetchSavedBooks()
         .then((data, err) => {
             if (err) console.log(err);
-            else this.setState({fileKeys: data });
+            else setFileKeys(data);
         });
-        
+    }, []);
+
+    const handleBookClick = (bookKey) => {
+        props.onSelectBook(bookKey);
     }
 
-    handleBookClick = (bookKey) => {
-        this.props.onSelectBook(bookKey);
+    const handleMenuClick = (event) => {
+        setMenuAnchorElement(event.currentTarget);
     }
 
-    handleMenuClick = (event) => {
-        this.setState({menuAnchorElement: event.currentTarget});
+    const handleMenuClose = () => {
+        setMenuAnchorElement(null);
     }
 
-    handleMenuClose = () => {
-        this.setState({menuAnchorElement: null});
-    }
-
-    renderSavedBooks() {
+    const renderSavedBooks = () => {
         return(
             <List>
-                {this.state.fileKeys.map(key => {
+                {fileKeys.map(key => {
                     return(
                         <Card key={key}>
                             <ListItem>
-                                {this.renderBookImage()}
+                                {renderBookImage()}
                                 <ListItemText>{key}</ListItemText>
-                                {this.renderBookMenu()}
+                                {renderBookMenu()}
                             </ListItem>
                         </Card>
                     );
@@ -59,7 +58,7 @@ class BookList extends React.Component {
         );
     }
     
-    renderBookImage(bookKey) {
+    const renderBookImage = (bookKey) => {
         return(
             <ListItemAvatar>
                 <Avatar alt={bookKey}  src="" style={{borderRadius:0}}/>
@@ -67,21 +66,21 @@ class BookList extends React.Component {
         );
     }
 
-    renderBookMenu(bookKey) {
+    const renderBookMenu = (bookKey) => {
         return(
             <ListItemSecondaryAction>
                 <IconButton 
                     aria-controls={`menu-$(bookKey)`} 
-                    aria-haspopup="true" onClick={this.handleMenuClick} 
+                    aria-haspopup="true" onClick={handleMenuClick} 
                     edge="end" style={{marginLeft:'auto'}}
                 >
                     <MoreVertIcon />
                 </IconButton>
                 <Menu 
                     id={`menu-$(key)`} 
-                    anchorEl={this.state.menuAnchorElement} 
-                    onClose={this.handleMenuClose}
-                    open={Boolean(this.state.menuAnchorElement)}
+                    anchorEl={menuAnchorElement} 
+                    onClose={handleMenuClose}
+                    open={Boolean(menuAnchorElement)}
                 >
                     <MenuItem>Remove from library</MenuItem>
                 </Menu>
@@ -89,7 +88,7 @@ class BookList extends React.Component {
         );
     }
 
-    renderUploadButton() {
+    const renderUploadButton = () => {
         return(
             <Fab 
                 variant="extended" 
@@ -101,14 +100,13 @@ class BookList extends React.Component {
         );
     }
 
-    render() {
-        return(
-            <div>
-                {this.renderSavedBooks()}
-                {this.renderUploadButton()}                
-            </div>
-        );
-    }
+    
+    return(
+        <div>
+            {renderSavedBooks()}
+            {renderUploadButton()}                
+        </div>
+    );
 }
 
 export default BookList;
