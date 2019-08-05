@@ -19,6 +19,7 @@ export default function UploadDialog(props) {
             console.log("Successfully uploaded book");
             //TODO: Show progress bar while book is uploading?
             props.onUploadBook();
+            props.updateFiles();
         })
         .catch(e=> {
             console.log("Error uploading book");

@@ -1,17 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import BookList from './BookList.component';
 import { Divider, Typography, Grid } from '@material-ui/core';
 import UploadButton from './UploadButton.component';
 import UploadDialog from './UploadDialog.component';
+import { fetchSavedBooks } from '../api/audioStorage';
 
 export default function MainPage() {
 
+    const [fileKeys, setFileKeys] = React.useState([]);
     const [shouldShowUploadDialog, setShouldShowUploadDialog] = React.useState(false);
 
 /*     function handleUploadDialogResponse(response) {
 
     } */
+
+    //Hooks equivalent of componentDidMount()
+    useEffect(() => {
+        updateSavedBooks();
+    }, []);
+
+    function updateSavedBooks() {
+        fetchSavedBooks()
+        .then((data) => {
+            setFileKeys(data);
+        })
+        .catch(e=> {
+            console.log(e);
+        });
+    }
+    
 
     //User clicks on "Upload audiobook" button
     function handleUploadButtonClick() {
@@ -29,12 +47,12 @@ export default function MainPage() {
     }
 
     function handleBookUploaded() {
-        // setShouldShowUploadDialog(false);
+        updateSavedBooks();
     }
 
     function renderUploadDialog() {
         return(
-            <UploadDialog open={shouldShowUploadDialog} onClose={handleUploadDialogClose} onUploadBook={handleBookUploaded}/>
+            <UploadDialog open={shouldShowUploadDialog} onClose={handleUploadDialogClose} onUploadBook={handleBookUploaded} updateFiles={updateSavedBooks}/>
         );
     }
 
@@ -51,7 +69,7 @@ export default function MainPage() {
 
             <Divider/>
 
-            <BookList />
+            <BookList fileKeys={fileKeys} updateFiles={updateSavedBooks}/>
 
             {renderUploadDialog()}
         </div>

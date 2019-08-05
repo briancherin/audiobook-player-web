@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { fetchSavedBooks, deleteBook } from '../api/audioStorage';
 
 import Card from '@material-ui/core/Card';
@@ -13,26 +13,15 @@ import DeleteBookDialog from './DeleteBookDialog.component';
 import { reject } from 'q';
 
 
-function BookList() {
+function BookList(props) {
 
     const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
-    const [fileKeys, setFileKeys] = React.useState([]);
     const [deleteAlertOpen, setDeleteAlertOpen] = React.useState(false);
     const [bookKeyToDelete, setBookKeyToDelete] = React.useState('');
 
-    //Hooks equivalent of componentDidMount()
-    useEffect(() => {
-        fetchSavedBooks()
-        .then((data) => {
-            setFileKeys(data);
-        })
-        .catch(e=> {
-            console.log(e);
-        });
-    }, []);
+    const fileKeys = props.fileKeys;
 
-
-    const handleMenuClick = (event) => {
+      const handleMenuClick = (event) => {
         setMenuAnchorElement(event.currentTarget);
     }
 
@@ -49,7 +38,7 @@ function BookList() {
             .then((data) => {
                 //TODO: Snackbar showing success?
                 console.log("Book deleted successfully");
-                setFileKeys(fileKeys.filter(key => key !== bookKey));
+                props.updateFiles();
             })
             .catch(e=> {
                 console.log("Error in deleting book");
