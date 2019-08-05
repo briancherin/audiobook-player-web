@@ -14,14 +14,14 @@ export default function UploadDialog(props) {
 
     function uploadFile() {
         props.onClose();
-        putAudioFile(selectedFile.name, selectedFile).then((err, data) => {
-            if (err) {
-                console.log("Error uploading book");
-            } else {
-                console.log("Successfully uploaded book");
-                //TODO: Show progress bar while book is uploading?
-                props.onUploadBook();
-            }
+        putAudioFile(selectedFile.name, selectedFile)
+        .then((data) => {
+            console.log("Successfully uploaded book");
+            //TODO: Show progress bar while book is uploading?
+            props.onUploadBook();
+        })
+        .catch(e=> {
+            console.log("Error uploading book");
         });
     }
 

@@ -6,18 +6,24 @@ export async function putAudioFile(fileName, file) {
     }
     //TODO: Should be specifying audio/m4b????
     return new Promise(function(resolve, reject) {
-        s3.putFile(fileName, file, 'audio/m4b').then((err, data) => {
-            if (err) reject(err);
-            else resolve(data);
+        s3.putFile(fileName, file, 'audio/m4b')
+        .then(data => {
+            resolve(data);
+        })
+        .catch(err => {
+            reject(err);
         });
     })
 }
 
 export async function deleteBook(fileKey) {
     return new Promise(function(resolve, reject) {
-        s3.deleteFile(fileKey).then((err, data) => {
-            if (err) reject(err);
-            else resolve(data);
+        s3.deleteFile(fileKey)
+        .then(data => {
+            resolve(data);
+        })
+        .catch(err => {
+            reject(err);
         });
     });
 }
@@ -25,10 +31,12 @@ export async function deleteBook(fileKey) {
 export async function fetchSavedBooks() {
     return new Promise(function(resolve, reject) {
         s3.listFileKeys()
-        .then((data, err) => {
-            if (err) reject(err);
-            else resolve(data);
+        .then(data => {
+            resolve(data);
         })
+        .catch(err => {
+            reject(err);
+        });
         
     });
 }
@@ -40,9 +48,11 @@ export async function getBookStream(bookKey) {
 export async function getBookObject(bookKey) {
     return new Promise(function(resolve, reject) {
         s3.getFile(bookKey)
-        .then((data, err) => {
-            if (err) reject(err);
-            else console.log(data);
+        .then(data => {
+            resolve(data);
         })
+        .catch(err => {
+            reject(err);
+        });
     })
 }

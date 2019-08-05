@@ -57,11 +57,13 @@ export async function deleteFile(fileKey) {
 export async function listFileKeys() {
     return new Promise(function (resolve, reject) {
         listFiles()
-        .then((data, err) => {
-            if (err) reject(err);
+        .then(data => {
             const keys = data.Contents.map(item => item.Key);
             const keysNoPrefix = removePrefixFromKeys(keys);
             resolve(keysNoPrefix);
+        })
+        .catch(e => {
+            reject(e);
         })
     });
 }
@@ -81,8 +83,8 @@ export async function putFile(fileName, file, contentType) {
     
     return new Promise(function(resolve, reject) {
         s3.putObject(params, function(err, data) {
-            if (err) reject(err);
-            else resolve(data)
+            if (err) {reject(err); console.log("in s3.js. error", err)}
+            else {resolve(data);}
         });
     });
     

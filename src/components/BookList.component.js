@@ -10,6 +10,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { ListItemText, Avatar, Menu, MenuItem, Fab, Typography } from '@material-ui/core';
 import DeleteBookDialog from './DeleteBookDialog.component';
+import { reject } from 'q';
 
 
 function BookList() {
@@ -22,9 +23,11 @@ function BookList() {
     //Hooks equivalent of componentDidMount()
     useEffect(() => {
         fetchSavedBooks()
-        .then((data, err) => {
-            if (err) console.log(err);
-            else setFileKeys(data);
+        .then((data) => {
+            setFileKeys(data);
+        })
+        .catch(e=> {
+            console.log(e);
         });
     }, []);
 
@@ -42,13 +45,14 @@ function BookList() {
         setBookKeyToDelete('');
 
         if (shouldDelete) {
-            deleteBook(bookKey).then((err, data) => {
-                if (err) console.log("Error in deleting book");
-                else {
-                    //TODO: Snackbar showing success?
-                    console.log("Book deleted successfully");
-                    setFileKeys(fileKeys.filter(key => key !== bookKey));
-                }
+            deleteBook(bookKey)
+            .then((data) => {
+                //TODO: Snackbar showing success?
+                console.log("Book deleted successfully");
+                setFileKeys(fileKeys.filter(key => key !== bookKey));
+            })
+            .catch(e=> {
+                console.log("Error in deleting book");
             });
         }
     }
