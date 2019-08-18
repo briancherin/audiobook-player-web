@@ -51,11 +51,18 @@ export default function MainPage() {
     //File is about to be uploaded to backend
     function handleBeginUpload() {
         setShouldShowUploadSpinner(true);
+        window.addEventListener("beforeunload", preventPageCloseHandler);
     }
 
     function handleBookUploaded() {
         updateSavedBooks();
         setShouldShowUploadSpinner(false);
+        window.removeEventListener("beforeunload", preventPageCloseHandler);
+    }
+
+    function preventPageCloseHandler(ev) {
+        ev.preventDefault();
+        return ev.returnValue = "Your file is uploading. Are you sure you would like to close?";
     }
 
     function renderUploadDialog() {
