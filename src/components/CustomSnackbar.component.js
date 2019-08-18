@@ -1,7 +1,15 @@
 import React from 'react';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 
-export default function SpinnerSnackbar(props) {
+export default function CustomSnackbar(props) {
+
+    function renderAction() {
+        if (props.spinner) {
+            return(
+                <CircularProgress />
+            );
+        }
+    }
 
     return (
         <Snackbar
@@ -10,12 +18,14 @@ export default function SpinnerSnackbar(props) {
                 horizontal: 'left'
             }}
             open={props.open}
+            autoHideDuration={props.autoHideDuration}
+            onClose={props.onClose}
             ContentProps={{
                 'aria-describedby': 'snackbar-message',
             }}
             message={<span id="snackbar-message">{props.message}</span>}
             action={[
-                <CircularProgress />
+                renderAction()
             ]}
         />
     );

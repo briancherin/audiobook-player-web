@@ -1,32 +1,22 @@
 import React from 'react';
 
 import Card from '@material-ui/core/Card';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import { ListItemText, Avatar, Menu, MenuItem, Fab, Typography } from '@material-ui/core';
+import { ListItemText, Avatar, Typography } from '@material-ui/core';
 import DeleteBookDialog from './DeleteBookDialog.component';
 import { deleteAudiobook } from '../api/audioManager';
+import BookMenu from './BookMenu.component';
 
 
 function BookList(props) {
 
-    const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
     const [deleteAlertOpen, setDeleteAlertOpen] = React.useState(false);
     const [bookToDelete, setBookToDelete] = React.useState('');
 
     const books = props.books;
 
-    const handleMenuClick = (event) => {
-        setMenuAnchorElement(event.currentTarget);
-    }
-
-    const handleMenuClose = () => {
-        setMenuAnchorElement(null);
-    }
 
     //The user confirms the deletion on the delete modal
     const handleDeleteAlertResponse = (bookKey, shouldDelete) => {
@@ -36,7 +26,7 @@ function BookList(props) {
         if (shouldDelete) {
             deleteAudiobook(bookKey)
             .then(() => {
-                //TODO: Snackbar showing success?
+                props.onDeleteBook();
                 props.updateFiles();
             })
             .catch((e) => {
@@ -54,7 +44,6 @@ function BookList(props) {
     const askBookDelete = (book) => {
         setBookToDelete(book);
         setDeleteAlertOpen(true);
-        setMenuAnchorElement(null);
     }
 
     const renderSavedBooks = () => {
@@ -93,26 +82,8 @@ function BookList(props) {
     }
 
     const renderBookMenu = (book) => {
-        const bookKey = book.id;
         return(
-            <ListItemSecondaryAction>
-                <IconButton 
-                    aria-controls={`menu-$(bookKey)`} 
-                    aria-haspopup="true" onClick={handleMenuClick} 
-                    edge="end" style={{marginLeft:'auto'}}
-                >
-                    <MoreVertIcon />
-                </IconButton>
-
-                <Menu 
-                    id={`menu-$(bookKey)`} 
-                    anchorEl={menuAnchorElement} 
-                    onClose={handleMenuClose}
-                    open={Boolean(menuAnchorElement)}
-                >
-                    <MenuItem onClick={() => askBookDelete(book)}>Remove from library</MenuItem>
-                </Menu>
-            </ListItemSecondaryAction>
+            <BookMenu book={book} askBookDelete={askBookDelete}/>
         );
     }
 

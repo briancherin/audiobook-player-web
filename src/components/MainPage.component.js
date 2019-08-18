@@ -5,13 +5,14 @@ import { Divider, Typography, Grid } from '@material-ui/core';
 import UploadButton from './UploadButton.component';
 import UploadDialog from './UploadDialog.component';
 import { listBooks } from '../api/audioManager';
-import SpinnerSnackbar from './SpinnerSnackbar.component';
+import CustomSnackbar from './CustomSnackbar.component';
 
 export default function MainPage() {
 
     const [bookOjects, setBookObjects] = React.useState(null);
     const [shouldShowUploadDialog, setShouldShowUploadDialog] = React.useState(false);
     const [shouldShowUploadSpinner, setShouldShowUploadSpinner] = React.useState(false);
+    const [shouldShowDeletedSnackbar, setShouldShowDeletedSnackbar] = React.useState(false);
 
 /*     function handleUploadDialogResponse(response) {
 
@@ -60,6 +61,14 @@ export default function MainPage() {
         window.removeEventListener("beforeunload", preventPageCloseHandler);
     }
 
+    function handleBookDeleted() {
+        setShouldShowDeletedSnackbar(true);
+    }
+
+    function handleDeletedSnackbarClose() {
+        setShouldShowDeletedSnackbar(false);
+    }
+
     function preventPageCloseHandler(ev) {
         ev.preventDefault();
         return ev.returnValue = "Your file is uploading. Are you sure you would like to close?";
@@ -73,7 +82,13 @@ export default function MainPage() {
 
     function renderUploadSpinner() {
         return(
-            <SpinnerSnackbar message="Uploading audiobook..." open={shouldShowUploadSpinner} />
+            <CustomSnackbar message="Uploading audiobook..." spinner open={shouldShowUploadSpinner} />
+        );
+    }
+
+    function renderDeleteSnackbar() {
+        return(
+            <CustomSnackbar message="Successfully deleted audiobook." open={shouldShowDeletedSnackbar} autoHideDuration={4000} onClose={handleDeletedSnackbarClose}/>
         );
     }
 
@@ -90,10 +105,11 @@ export default function MainPage() {
 
             <Divider/>
 
-            <BookList books={bookOjects} updateFiles={updateSavedBooks}/>
+            <BookList books={bookOjects} updateFiles={updateSavedBooks} onDeleteBook={handleBookDeleted}/>
 
             {renderUploadDialog()}
             {renderUploadSpinner()}
+            {renderDeleteSnackbar()}
         </div>
     );
 }
