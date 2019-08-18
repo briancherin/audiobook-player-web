@@ -4,11 +4,11 @@ import BookList from './BookList.component';
 import { Divider, Typography, Grid } from '@material-ui/core';
 import UploadButton from './UploadButton.component';
 import UploadDialog from './UploadDialog.component';
-import { fetchSavedBooks } from '../api/audioStorage';
+import { listBooks } from '../api/audioManager';
 
 export default function MainPage() {
 
-    const [fileKeys, setFileKeys] = React.useState([]);
+    const [bookOjects, setBookObjects] = React.useState([]);
     const [shouldShowUploadDialog, setShouldShowUploadDialog] = React.useState(false);
 
 /*     function handleUploadDialogResponse(response) {
@@ -21,9 +21,9 @@ export default function MainPage() {
     }, []);
 
     function updateSavedBooks() {
-        fetchSavedBooks()
+        listBooks()
         .then((data) => {
-            setFileKeys(data);
+            setBookObjects(data);
         })
         .catch(e=> {
             console.log(e);
@@ -59,7 +59,7 @@ export default function MainPage() {
     return(
         <div>
             <Grid container>
-                <Grid xs>
+                <Grid item xs>
                     <h1>My Library</h1>
                 </Grid>
                 <Grid item>
@@ -69,7 +69,7 @@ export default function MainPage() {
 
             <Divider/>
 
-            <BookList fileKeys={fileKeys} updateFiles={updateSavedBooks}/>
+            <BookList books={bookOjects} updateFiles={updateSavedBooks}/>
 
             {renderUploadDialog()}
         </div>

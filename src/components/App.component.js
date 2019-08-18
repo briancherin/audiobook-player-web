@@ -9,9 +9,6 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import MainPage from './MainPage.component';
 import Settings from './Settings.component';
-import Player from './Player.component';
-import Uploader from './Uploader.component';
-import BookList from './BookList.component';
 
 import NavBar from './NavBar.component';
 import { Container } from '@material-ui/core';

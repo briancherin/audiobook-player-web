@@ -78,7 +78,7 @@ export async function listFiles() {
     });
 }
 
-export async function putFile(fileName, file, contentType) {
+export async function putFile(fileName, file) {
     const params = await getPutFileParams(fileName, file);
     
     return new Promise(function(resolve, reject) {

@@ -11,5 +11,20 @@
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"api": {
+		"audiobookplayer": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS"
+			}
+		}
 	}
 }

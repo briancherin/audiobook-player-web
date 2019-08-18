@@ -1,12 +1,12 @@
 import * as s3 from './s3';
 
-export async function putAudioFile(fileName, file) {
+export async function uploadAudioFile(fileName, file) {
     if(!s3.initialized) {
         await s3.init();
     }
     //TODO: Should be specifying audio/m4b????
     return new Promise(function(resolve, reject) {
-        s3.putFile(fileName, file, 'audio/m4b')
+        s3.putFile(fileName, file)
         .then(data => {
             resolve(data);
         })
@@ -16,7 +16,7 @@ export async function putAudioFile(fileName, file) {
     })
 }
 
-export async function deleteBook(fileKey) {
+export async function deleteAudioFile(fileKey) {
     return new Promise(function(resolve, reject) {
         s3.deleteFile(fileKey)
         .then(data => {

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core';
 
-import { putAudioFile } from '../api/audioStorage';
+import { uploadAudiobook } from '../api/audioManager';
 
 export default function UploadDialog(props) {
 
@@ -14,7 +14,7 @@ export default function UploadDialog(props) {
 
     function uploadFile() {
         props.onClose();
-        putAudioFile(selectedFile.name, selectedFile)
+        uploadAudiobook(selectedFile.name, selectedFile)
         .then((data) => {
             console.log("Successfully uploaded book");
             //TODO: Show progress bar while book is uploading?
@@ -30,7 +30,7 @@ export default function UploadDialog(props) {
         <Dialog
             open={props.open}
             onClose={handleClose}
-            fullWidth="true"
+            fullWidth={true}
             maxWidth="sm"
         >
             <DialogTitle>Upload an audiobook</DialogTitle>

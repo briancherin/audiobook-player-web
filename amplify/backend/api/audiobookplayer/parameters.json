@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "audiobookplayer",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authaudiobookplayerdc38208a",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

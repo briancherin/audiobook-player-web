@@ -1,5 +1,4 @@
 import React from 'react';
-import { fetchSavedBooks, deleteBook } from '../api/audioStorage';
 
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,18 +9,18 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { ListItemText, Avatar, Menu, MenuItem, Fab, Typography } from '@material-ui/core';
 import DeleteBookDialog from './DeleteBookDialog.component';
-import { reject } from 'q';
+import { deleteAudiobook } from '../api/audioManager';
 
 
 function BookList(props) {
 
     const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
     const [deleteAlertOpen, setDeleteAlertOpen] = React.useState(false);
-    const [bookKeyToDelete, setBookKeyToDelete] = React.useState('');
+    const [bookToDelete, setBookToDelete] = React.useState('');
 
-    const fileKeys = props.fileKeys;
+    const books = props.books;
 
-      const handleMenuClick = (event) => {
+    const handleMenuClick = (event) => {
         setMenuAnchorElement(event.currentTarget);
     }
 
@@ -29,45 +28,46 @@ function BookList(props) {
         setMenuAnchorElement(null);
     }
 
+    //The user confirms the deletion on the delete modal
     const handleDeleteAlertResponse = (bookKey, shouldDelete) => {
         setDeleteAlertOpen(false);
-        setBookKeyToDelete('');
+        setBookToDelete('');
 
         if (shouldDelete) {
-            deleteBook(bookKey)
-            .then((data) => {
+            deleteAudiobook(bookKey)
+            .then(() => {
                 //TODO: Snackbar showing success?
-                console.log("Book deleted successfully");
                 props.updateFiles();
             })
-            .catch(e=> {
-                console.log("Error in deleting book");
+            .catch((e) => {
+                console.log("Error in deleting book", e);
             });
         }
     }
 
     const handleDeleteAlertClose = () => {
         setDeleteAlertOpen(false);
-        setBookKeyToDelete('');
+        setBookToDelete('');
     }
 
-    const askBookDelete = (bookKey) => {
-        setBookKeyToDelete(bookKey);
+    //Trigger the confirmation alert for deleting a book
+    const askBookDelete = (book) => {
+        setBookToDelete(book);
         setDeleteAlertOpen(true);
         setMenuAnchorElement(null);
     }
 
     const renderSavedBooks = () => {
-        if (fileKeys.length > 0) {
+        if (books.length > 0) {
             return(
                 <List>
-                    {fileKeys.map(key => {
+                    {books.map(book => {
                         return(
-                            <Card key={key}>
+                            <Card key={book.id}>
                                 <ListItem>
                                     {renderBookImage()}
-                                    <ListItemText>{key}</ListItemText>
-                                    {renderBookMenu(key)}
+                                    <ListItemText>{book.title}</ListItemText>
+                                    {renderBookMenu(book)}
                                 </ListItem>
                             </Card>
                         );
@@ -88,7 +88,8 @@ function BookList(props) {
         );
     }
 
-    const renderBookMenu = (bookKey) => {
+    const renderBookMenu = (book) => {
+        const bookKey = book.id;
         return(
             <ListItemSecondaryAction>
                 <IconButton 
@@ -100,23 +101,23 @@ function BookList(props) {
                 </IconButton>
 
                 <Menu 
-                    id={`menu-$(key)`} 
+                    id={`menu-$(bookKey)`} 
                     anchorEl={menuAnchorElement} 
                     onClose={handleMenuClose}
                     open={Boolean(menuAnchorElement)}
                 >
-                    <MenuItem onClick={() => askBookDelete(bookKey)}>Remove from library</MenuItem>
+                    <MenuItem onClick={() => askBookDelete(book)}>Remove from library</MenuItem>
                 </Menu>
             </ListItemSecondaryAction>
         );
     }
 
-    const renderDeleteModal = (bookKey) => {
+    const renderDeleteModal = (book) => {
         return(
-            <DeleteBookDialog title="Delete?" open={deleteAlertOpen} bookKey={bookKey} onResponse={handleDeleteAlertResponse} handleClose={handleDeleteAlertClose}>
-                <Typography>
-                    Are you sure you would like to delete this audiobook ({bookKey})? You will lose access to this audiobook on all of your devices, unless you upload the file again.
-                </Typography>    
+            <DeleteBookDialog title="Delete?" open={deleteAlertOpen} bookKey={book.id} onResponse={handleDeleteAlertResponse} handleClose={handleDeleteAlertClose}>
+                {/* <Typography> */}
+                    Are you sure you would like to delete this audiobook ({book.title})? You will lose access to this audiobook on all of your devices, unless you upload the file again.
+                {/* </Typography>     */}
             </DeleteBookDialog>
         );
     }
@@ -126,7 +127,7 @@ function BookList(props) {
     return(
         <div>
             {renderSavedBooks()}   
-            {renderDeleteModal(bookKeyToDelete)}    
+            {renderDeleteModal(bookToDelete)}    
         </div>
     );
 }
