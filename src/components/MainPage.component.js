@@ -8,7 +8,7 @@ import { listBooks } from '../api/audioManager';
 
 export default function MainPage() {
 
-    const [bookOjects, setBookObjects] = React.useState([]);
+    const [bookOjects, setBookObjects] = React.useState(null);
     const [shouldShowUploadDialog, setShouldShowUploadDialog] = React.useState(false);
 
 /*     function handleUploadDialogResponse(response) {

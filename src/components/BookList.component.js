@@ -58,26 +58,30 @@ function BookList(props) {
     }
 
     const renderSavedBooks = () => {
-        if (books.length > 0) {
-            return(
-                <List>
-                    {books.map(book => {
-                        return(
-                            <Card key={book.id}>
-                                <ListItem>
-                                    {renderBookImage()}
-                                    <ListItemText>{book.title}</ListItemText>
-                                    {renderBookMenu(book)}
-                                </ListItem>
-                            </Card>
-                        );
-                    })}
-                </List>
-            );
+        if (books !== null) {
+            if (books.length > 0) {
+                return(
+                    <List>
+                        {books.map(book => {
+                            return(
+                                <Card key={book.id}>
+                                    <ListItem>
+                                        {renderBookImage()}
+                                        <ListItemText>{book.title}</ListItemText>
+                                        {renderBookMenu(book)}
+                                    </ListItem>
+                                </Card>
+                            );
+                        })}
+                    </List>
+                );
+            } else {
+                return(
+                    <Typography>You currently have no audiobooks in your library. Try uploading an mp3 or m4b file!</Typography>
+                );
+            }
         }
-        return(
-            <Typography>You currently have no audiobooks in your library. Try uploading an mp3 or m4b file!</Typography>
-        );
+        
     }
     
     const renderBookImage = (bookKey) => {
