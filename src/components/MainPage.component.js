@@ -5,11 +5,13 @@ import { Divider, Typography, Grid } from '@material-ui/core';
 import UploadButton from './UploadButton.component';
 import UploadDialog from './UploadDialog.component';
 import { listBooks } from '../api/audioManager';
+import SpinnerSnackbar from './SpinnerSnackbar.component';
 
 export default function MainPage() {
 
     const [bookOjects, setBookObjects] = React.useState(null);
     const [shouldShowUploadDialog, setShouldShowUploadDialog] = React.useState(false);
+    const [shouldShowUploadSpinner, setShouldShowUploadSpinner] = React.useState(false);
 
 /*     function handleUploadDialogResponse(response) {
 
@@ -46,13 +48,25 @@ export default function MainPage() {
         setShouldShowUploadDialog(false);
     }
 
+    //File is about to be uploaded to backend
+    function handleBeginUpload() {
+        setShouldShowUploadSpinner(true);
+    }
+
     function handleBookUploaded() {
         updateSavedBooks();
+        setShouldShowUploadSpinner(false);
     }
 
     function renderUploadDialog() {
         return(
-            <UploadDialog open={shouldShowUploadDialog} onClose={handleUploadDialogClose} onUploadBook={handleBookUploaded} updateFiles={updateSavedBooks}/>
+            <UploadDialog open={shouldShowUploadDialog} onClose={handleUploadDialogClose} onUploadBook={handleBookUploaded} onBeginUpload={handleBeginUpload}/>
+        );
+    }
+
+    function renderUploadSpinner() {
+        return(
+            <SpinnerSnackbar message="Uploading audiobook..." open={shouldShowUploadSpinner} />
         );
     }
 
@@ -72,6 +86,7 @@ export default function MainPage() {
             <BookList books={bookOjects} updateFiles={updateSavedBooks}/>
 
             {renderUploadDialog()}
+            {renderUploadSpinner()}
         </div>
     );
 }

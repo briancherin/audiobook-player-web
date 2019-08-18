@@ -14,12 +14,13 @@ export default function UploadDialog(props) {
 
     function uploadFile() {
         props.onClose();
+        //TODO: Show Spinner for uploading book
+        props.onBeginUpload();
         uploadAudiobook(selectedFile.name, selectedFile)
         .then((data) => {
             console.log("Successfully uploaded book");
             //TODO: Show progress bar while book is uploading?
             props.onUploadBook();
-            props.updateFiles();
         })
         .catch(e=> {
             console.log("Error uploading book");
