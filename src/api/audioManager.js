@@ -11,7 +11,7 @@ export async function listBooks() {
 }
 
 export async function uploadAudiobook(bookTitle, bookFile) {
-    const bookKey = addBookToDatabase(bookTitle);
+    const bookKey = await addBookToDatabase(bookTitle);
 
     const fileExtension = getFileExtension(bookFile);
     const newFileName = bookKey + "." + fileExtension;
