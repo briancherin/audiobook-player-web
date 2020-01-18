@@ -1,5 +1,5 @@
-import { uploadAudioFile, deleteAudioFile } from '../api/audioStorage';
-import { addBookToDatabase, deleteBookFromDatabase, fetchBooks } from './database';
+import { uploadAudioFile, deleteAudioFile } from '../api/firebaseAudioStorage';
+import { addBookToDatabase, deleteBookFromDatabase, fetchBooks } from './firebaseDatabase';
 import { getFileExtension } from './fileUtils';
 
 export async function listBooks() {
@@ -11,9 +11,10 @@ export async function listBooks() {
 }
 
 export async function uploadAudiobook(bookTitle, bookFile) {
-    const bookKey = await addBookToDatabase(bookTitle);
-
     const fileExtension = getFileExtension(bookFile);
+
+    const bookKey = await addBookToDatabase(bookTitle, fileExtension);
+
     const newFileName = bookKey + "." + fileExtension;
 
     return new Promise(async function(resolve, reject) {
@@ -24,11 +25,11 @@ export async function uploadAudiobook(bookTitle, bookFile) {
     
 }
 
-export async function deleteAudiobook(bookKey) {
+export async function deleteAudiobook(bookObject) {
     //TODO: need await?
     return new Promise(async function(resolve, reject) {
-        await deleteBookFromDatabase(bookKey);
-        await deleteAudioFile(bookKey);
+        await deleteBookFromDatabase(bookObject.id);
+        await deleteAudioFile(bookObject.id, bookObject.fileExtension);
         resolve();
     })
     

@@ -1,9 +1,7 @@
-import React from 'react';
-import Amplify from 'aws-amplify';
-import { withAuthenticator } from 'aws-amplify-react';
-import aws_exports from '../aws-exports';
-// import { getBookStream } from '../api/audioStorage';
-// import * as audioManager from '../api/audioManager';
+import React, { useEffect } from 'react';
+
+import firebase from "../api/firebase";
+import withFirebaseAuth from "react-with-firebase-auth";
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
@@ -13,23 +11,48 @@ import Settings from './Settings.component';
 import NavBar from './NavBar.component';
 import { Container } from '@material-ui/core';
 
+import config from '../firebaseConfig';
 
-Amplify.configure({...aws_exports, Analytics: {disabled:true}});
+const firebaseAppAuth = firebase.auth();
+const providers = {
+    googleProvider: new firebase.auth.GoogleAuthProvider()
+};
+
 
 
 class App extends React.Component {
 
     render () {
+
+        const {
+            user,
+            signOut,
+            signInWithGoogle,
+        } = this.props;
+
         return(
             <Router>
                 <div style={{display:'flex'}}>
 
                     <NavBar />
                     <main style={{flexGrow:1}}>
+                        {
+                        user ? 
+
                         <Container>
                             <Route path="/" exact component={MainPage} />
                             <Route path="/settings" component={Settings}/>
                         </Container>
+
+                        :
+
+                        <p>Please sign in</p>
+                        }
+                        {
+                            user
+                                ? <button onClick={signOut}>Sign out</button>
+                                : <button onClick={signInWithGoogle}>Sign in</button>
+                        }      
                     </main>
 
                 </div>
@@ -38,4 +61,7 @@ class App extends React.Component {
     }
 }
 
-export default withAuthenticator(App, {includeGreetings: true});
+export default withFirebaseAuth({
+    providers, 
+    firebaseAppAuth
+}) (App);

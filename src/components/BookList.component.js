@@ -19,12 +19,12 @@ function BookList(props) {
 
 
     //The user confirms the deletion on the delete modal
-    const handleDeleteAlertResponse = (bookKey, shouldDelete) => {
+    const handleDeleteAlertResponse = (bookObject, shouldDelete) => {
         setDeleteAlertOpen(false);
         setBookToDelete('');
 
         if (shouldDelete) {
-            deleteAudiobook(bookKey)
+            deleteAudiobook(bookObject)
             .then(() => {
                 props.onDeleteBook();
                 props.updateFiles();
@@ -89,7 +89,7 @@ function BookList(props) {
 
     const renderDeleteModal = (book) => {
         return(
-            <DeleteBookDialog title="Delete?" open={deleteAlertOpen} bookKey={book.id} onResponse={handleDeleteAlertResponse} handleClose={handleDeleteAlertClose}>
+            <DeleteBookDialog title="Delete?" open={deleteAlertOpen} bookToDelete={book} onResponse={handleDeleteAlertResponse} handleClose={handleDeleteAlertClose}>
                 {/* <Typography> */}
                     Are you sure you would like to delete this audiobook ({book.title})? You will lose access to this audiobook on all of your devices, unless you upload the file again.
                 {/* </Typography>     */}

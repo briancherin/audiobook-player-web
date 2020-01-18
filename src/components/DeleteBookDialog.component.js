@@ -9,7 +9,7 @@ export default function DeleteBookDialog(props) {
     }
 
     function handleConfirmClick() {
-        props.onResponse(props.bookKey, true)
+        props.onResponse(props.bookToDelete, true)
     }
 
     return(

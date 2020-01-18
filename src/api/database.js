@@ -7,9 +7,10 @@ export async function fetchBooks() {
     return results.data.listBooks.items;
 }
 
-export async function addBookToDatabase(bookTitle) {
+export async function addBookToDatabase(bookTitle, fileExtension) {
     const input = {
         title: bookTitle,
+        fileExtension: fileExtension,
         currentPositionMillis: 0
     }
     const result = await API.graphql(graphqlOperation(createBook, {input}));
